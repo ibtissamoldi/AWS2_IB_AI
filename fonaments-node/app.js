@@ -1,1 +1,4 @@
-console.log("Hola des de app.js!.....hi");
+const { sumaFinsA, esParell } = require("./utils");
+
+console.log(sumaFinsA(100));
+console.log(esParell(7));
