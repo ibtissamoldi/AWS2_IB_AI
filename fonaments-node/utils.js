@@ -9,3 +9,15 @@ function esParell(n) {
 }
 
 module.exports = { sumaFinsA, esParell };
+
+
+function estadistiques(numeros) {
+  const minim = Math.min(...numeros);
+  const maxim = Math.max(...numeros);
+  const suma = numeros.reduce((acc, num) => acc + num, 0);
+  const mitjana = suma / numeros.length;
+
+  return { minim, maxim, mitjana };
+}
+
+module.exports = { sumaFinsA, esParell, estadistiques };
