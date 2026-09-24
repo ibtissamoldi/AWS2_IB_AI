@@ -9,7 +9,8 @@
     "taula": "node ampliacio/taula.js",
     "sistema": "node ampliacio/sistema.js",
     "calc": "node ampliacio/calc.js",
-    "test": "node --test"
+    "test": "node --test",
+    "salut": "node --env-file=.env ampliacio/salut.js"
   },
   "keywords": [],
   "author": "",
