@@ -11,6 +11,9 @@ function multiplica(a, b) {
 }
 
 function divideix(a, b) {
+  if (b === 0) {
+    throw new Error("no es pot dividir per zero");
+  }
   return a / b;
 }
 

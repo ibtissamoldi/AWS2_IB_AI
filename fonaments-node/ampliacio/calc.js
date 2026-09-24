@@ -21,10 +21,10 @@ switch (operador) {
     console.log(multiplica(num1, num2));
     break;
   case "/":
-    if (num2 === 0) {
-      console.log("Error: no es pot dividir per zero");
-    } else {
+    try {
       console.log(divideix(num1, num2));
+    } catch (e) {
+      console.log(`Error: ${e.message}`);
     }
     break;
   default:
