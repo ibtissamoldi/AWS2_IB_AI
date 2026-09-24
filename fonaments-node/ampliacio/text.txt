@@ -1,0 +1,4 @@
+Hola des de Node.js!
+Aquest és un fitxer de text de prova per a l'exercici.
+Comptarem línies, paraules i caràcters fàcilment.
+Bona sort amb la programació!
