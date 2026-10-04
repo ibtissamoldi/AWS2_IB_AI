@@ -6,8 +6,10 @@
     "tipus": "portatil",
     "aula": "A12",
     "valor": 450,
-    "estat": "disponible",
-    "dataAlta": "2025-09-08T07:30:00.000Z"
+    "estat": "prestat",
+    "dataAlta": "2025-09-08T07:30:00.000Z",
+    "prestatA": "Joan",
+    "dataPrestec": "2026-10-04T16:47:21.012Z"
   },
   {
     "id": "f3f49249-dc28-4f90-a5ae-c7978306d03b",
