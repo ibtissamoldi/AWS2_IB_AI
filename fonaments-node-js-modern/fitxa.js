@@ -10,7 +10,7 @@ function fitxa({ nom, valor, estat = "disponible", ...resta }) {
   );
 
   console.log(
-    `Altres camps: ${Object.keys(resta).join(", ") || "cap"}`
+    `\tAltres camps: ${Object.keys(resta).join(", ") || "cap"}`
   );
 }
 
