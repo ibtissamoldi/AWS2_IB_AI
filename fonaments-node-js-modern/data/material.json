@@ -124,5 +124,14 @@
     "valor": 610,
     "estat": "disponible",
     "dataAlta": "2026-01-09T09:00:00.000Z"
+  },
+  {
+    "id": "28704f88-b0e2-4d9e-b349-1f2706f5e036",
+    "nom": "Epson EB-FH06",
+    "tipus": "projector",
+    "aula": "A14",
+    "valor": 540,
+    "estat": "disponible",
+    "dataAlta": "2026-10-04T15:52:24.093Z"
   }
 ]
