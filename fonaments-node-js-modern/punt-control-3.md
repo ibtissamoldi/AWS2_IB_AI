@@ -6,14 +6,14 @@ Escriu què mostra cada línia **sense executar res**. Després comprova-ho amb 
 const m = { nom: "HP 14", valor: 0 };
 ```
 
-1. console.log(0 ?? 5);                                   → Mostra: ________  Encertat: ___
-2. console.log(0 || 5);                                   → Mostra: ________  Encertat: ___
-3. console.log("" ?? "buit");                             → Mostra: ________  Encertat: ___
-4. console.log("" || "buit");                             → Mostra: ________  Encertat: ___
-5. console.log(m.valor || "sense valor");                 → Mostra: ________  Encertat: ___
-6. console.log(m.valor ?? "sense valor");                 → Mostra: ________  Encertat: ___
-7. console.log(m.prestatA?.toUpperCase());                → Mostra: ________  Encertat: ___
-8. console.log(m.prestatA?.toUpperCase() ?? "a l'aula");  → Mostra: ________  Encertat: ___
+1. console.log(0 ?? 5);                                   → Mostra: 0  Encertat: 0
+2. console.log(0 || 5);                                   → Mostra: 5  Encertat: 5
+3. console.log("" ?? "buit");                             → Mostra:""  Encertat: ""
+4. console.log("" || "buit");                             → Mostra: buit  Encertat: buit
+5. console.log(m.valor || "sense valor");                 → Mostra: 0  Encertat: sense valor
+6. console.log(m.valor ?? "sense valor");                 → Mostra: 0  Encertat: 0
+7. console.log(m.prestatA?.toUpperCase());                → Mostra:   Encertat: undefined
+8. console.log(m.prestatA?.toUpperCase() ?? "a l'aula");  → Mostra: a l'aula  Encertat: a l'aula
 
 ## Per pensar
 
