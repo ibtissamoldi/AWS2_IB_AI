@@ -15,7 +15,7 @@ setTimeout(() => {
 console.log("G");
 "
 
-Mi predicción:
+Mi prediccion:
 
 creo que saldra :
 A
