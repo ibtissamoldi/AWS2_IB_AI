@@ -109,10 +109,23 @@ console.log("3");
 lo que creo que se ejecutara es : 3 2 1
 el 3 es sincron saldra primero luego los timeout primero el de 0ms y despues de 10 
 
-
-
-## Conclusions
 - **Exercici 3:** quants tics es perden i per què
+Durante los 2 segundos que dura el trabajo pesado se pierden
+aproximadamente 10 oportunidades de hacer un tic porque:
+2000/200 = 10 tics
+
+Per què el tic 5 surt una sola
+vegada i no se n’acumulen deu?
+
+-Porque JavaScript ejecuta el codigo en un solo hilo principal
+Mientras la funcion ocupa(2000) bloquea el hilo el setInterval
+no puede ejecutar sus callbacks
+
+Cuando termina el trabajo pesado el reloj continua y muestra el
+tic siguiente una sola vez
+los tics que no se han podido ejecutar no se acumulan para ejecutarse todos despues
+
+
 - **Exercici 4b:** què diuen els tics i el salt màxim
 - **Exercici 5:** quants grups amb 2, 4 i 6 fils
 - **Exercici 6:** trossos grans, petits i nextTick
