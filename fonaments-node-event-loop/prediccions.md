@@ -99,6 +99,15 @@ y el siguente fase del event loop es siempre Check( setImmediate), el setTimeout
 
 ## Cas C
 // Cas C
+```
+setTimeout(() => console.log("1"), 10);
+setTimeout(() => console.log("2"), 0);
+const inici = Date.now();
+while (Date.now() - inici < 50) { /* espera */ }
+console.log("3");
+```
+lo que creo que se ejecutara es : 3 2 1
+el 3 es sincron saldra primero luego los timeout primero el de 0ms y despues de 10 
 
 
 
