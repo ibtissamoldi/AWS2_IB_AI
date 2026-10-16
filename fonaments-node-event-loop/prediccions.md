@@ -127,5 +127,9 @@ los tics que no se han podido ejecutar no se acumulan para ejecutarse todos desp
 
 
 - **Exercici 4b:** què diuen els tics i el salt màxim
+
+
 - **Exercici 5:** quants grups amb 2, 4 i 6 fils
+
+
 - **Exercici 6:** trossos grans, petits i nextTick
