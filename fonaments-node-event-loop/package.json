@@ -4,5 +4,10 @@
   "description": "Activitat 3: l'event loop",
   "type": "commonjs",
   "devDependencies": {
+  },
+  "scripts": {
+    "test": "node --test"
   }
+  
 }
+
