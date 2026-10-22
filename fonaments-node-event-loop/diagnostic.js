@@ -7,4 +7,3 @@ setTimeout(() => {
   Promise.resolve().then(() => console.log("F"));
 }, 0);
 console.log("G");
-
