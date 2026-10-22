@@ -1,0 +1,1 @@
+Ús: node exemples/p2-sortides.js <fitxer.json>
