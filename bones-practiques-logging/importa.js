@@ -4,7 +4,12 @@ const fs = require("node:fs");
 const material = require("./material");
 
 const fitxer = process.argv[2];
-console.log("Iniciant importació...");
+
+if(!fitxer){
+  console.error("Ús: node importa.js data/compra-octubre.csv")
+  process.exit(2);
+}
+  console.error("Iniciant importació...");
 
 try {
   const text = fs.readFileSync(fitxer, "utf8");
@@ -12,22 +17,28 @@ try {
   const files = text.trim().split("\n").slice(1);
   const inventari = material.llegir();
   const importats = [];
+  let rebutjats=0;
 
-  for (const fila of files) {
+  files.forEach((fila, i) => {
     const [nom, tipus, aula, valor] = fila.split(";");
     try {
       const nou = material.crear({ nom, tipus, aula, valor });
       inventari.push(nou);
       importats.push(nou);
-      console.log("Importat " + nom);
-    } catch {
-      console.log("Error en una fila");
+    } catch(err) {
+      rebutjats++;
+      console.error(`Fila ${i+2} rebutjada: ${err.message}`);
     }
-  }
+  });
 
   material.desar(inventari);
-  console.log("Fet!");
+  console.error(`Importació: ${importats.length} importats i ${rebutjats} rebutjats de ${files.length} files`);
+
+  if (rebutjats >0){
+    process.exitCode=1;
+  }
   console.log(JSON.stringify(importats, null, 2));
 } catch (err) {
-  console.log("Error: " + err);
+  console.error("No es pot importar: " + err.message);
+  process.exitCode=1;
 }
