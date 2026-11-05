@@ -1,7 +1,11 @@
 // servidor.js · API de l'inventari de l'aula
 // GET /material[?estat=...]   GET /material/<id>   POST /prestecs
+
+const crypto = require("node:crypto");
+
 const http = require("node:http");
 const material = require("./material");
+const logger = require("./logger");
 
 const PORT = Number(process.env.PORT ?? 3000);
 const TOKEN = process.env.TOKEN ?? "aula-2026";
@@ -19,7 +23,7 @@ function enviarError(res, err) {
   if (err.status) {
     enviar(res, err.status, { error: err.message });
   } else {
-    console.log("error");
+    logger.error(err, "Error intern del servidor");
     enviar(res, 500, { error: "Error intern" });
   }
 }
@@ -29,7 +33,7 @@ function prestec(req, res, cos) {
     return enviar(res, 401, { error: "Cal un token vàlid" });
   }
   const { id, persona } = JSON.parse(cos);
-  console.log("Préstec:", id, persona);
+  logger.info({ id, persona }, "Préstec");
   // Només es presta a correus del centre
   if (!persona.email.endsWith("@institut.cat")) {
     return enviar(res, 403, { error: "Només per a correus del centre" });
@@ -43,7 +47,20 @@ function prestec(req, res, cos) {
 }
 
 const servidor = http.createServer((req, res) => {
-  console.log(new Date().toLocaleString() + " " + req.method + " " + req.url + " " + JSON.stringify(req.headers));
+  const inici = performance.now();
+  req.id = req.headers["x-request-id"] ?? crypto.randomUUID();
+  req.log = logger.child({ reqId: req.id });
+  res.setHeader("X-Request-Id", req.id);
+
+  res.on("finish", () => {
+    const ms = Math.round(performance.now() - inici);
+    const estat = res.statusCode;
+    const dades = { metode: req.method, ruta: req.url, estat, ms,
+    };
+
+    req.log.info(dades, "petició atesa");
+  });
+
   const url = new URL(req.url, "http://localhost");
   const parts = url.pathname.split("/").filter(Boolean);
 
@@ -73,4 +90,4 @@ const servidor = http.createServer((req, res) => {
   }
 });
 
-servidor.listen(PORT, () => console.log("Servidor en marxa"));
+servidor.listen(PORT, () => logger.info({ port: PORT }, "servidor escoltant"));

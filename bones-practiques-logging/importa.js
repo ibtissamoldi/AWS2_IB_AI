@@ -5,13 +5,13 @@ const material = require("./material");
 
 const fitxer = process.argv[2];
 
-const opciones= process.argv.slice(3);
+const opciones = process.argv.slice(3);
 
 const verbose = opciones.includes("--verbose");
 const quiet = opciones.includes("--quiet");
 
-for(const opcion of opciones){
-  if(opcion !== "--verbose" && opcion !=="--quiet"){
+for (const opcion of opciones) {
+  if (opcion !== "--verbose" && opcion !== "--quiet") {
     console.error(`Opcion desconocida: ${opcion}`);
     console.error("Ús: node importa.js data/compra-octubre.csv [--verbose] [--quiet]");
     process.exit(2);
@@ -50,7 +50,7 @@ try {
   const files = text.trim().split("\n").slice(1);
   const inventari = material.llegir();
   const importats = [];
-  let rebutjats=0;
+  let rebutjats = 0;
 
   files.forEach((fila, i) => {
     const [nom, tipus, aula, valor] = fila.split(";");
@@ -59,20 +59,19 @@ try {
       inventari.push(nou);
       importats.push(nou);
       log.debug(`Fila ${i + 2} importada: ${nou.nom} (${nou.id.slice(0, 8)})`);
-    } catch(err) {
+    } catch (err) {
       rebutjats++;
-      log.warn(` Fila ${i+2} rebutjada: ${err.message}`);
+      log.warn(` Fila ${i + 2} rebutjada: ${err.message}`);
     }
   });
 
   material.desar(inventari);
   log.info(`Importació: ${importats.length} importats i ${rebutjats} rebutjats de ${files.length} files`);
-  
-  if (rebutjats >0){
-    process.exitCode=1;
+  if (rebutjats > 0) {
+    process.exitCode = 1;
   }
   console.log(JSON.stringify(importats, null, 2));
 } catch (err) {
   log.error("No es pot importar: " + err.message);
-  process.exitCode=1;
+  process.exitCode = 1;
 }
