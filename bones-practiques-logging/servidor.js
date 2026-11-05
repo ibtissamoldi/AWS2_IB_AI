@@ -19,12 +19,12 @@ function enviar(res, status, dades) {
 }
 
 // Els errors amb status són culpa de la petició (400, 404, 409...); la resta, un error nostre
-function enviarError(res, err) {
+function enviarError(req, res, err) {
   if (err.status) {
     enviar(res, err.status, { error: err.message });
   } else {
-    logger.error(err, "Error intern del servidor");
-    enviar(res, 500, { error: "Error intern" });
+    req.log.error({ err }, "error inesperat");
+    enviar(res, 500, { error: "Error intern", ref: req.id });
   }
 }
 
@@ -33,15 +33,15 @@ function prestec(req, res, cos) {
     return enviar(res, 401, { error: "Cal un token vàlid" });
   }
   const { id, persona } = JSON.parse(cos);
-  logger.info({ id, persona }, "Préstec");
   // Només es presta a correus del centre
   if (!persona.email.endsWith("@institut.cat")) {
     return enviar(res, 403, { error: "Només per a correus del centre" });
   }
   const nou = material.prestar(inventari, id, persona.nom);
   material.desarAsync(nou, (err) => {
-    if (err) return enviarError(res, err);
+    if (err) return enviarError(req, res, err);
     inventari = nou;
+    req.log.info({ id }, "préstec registrat");
     enviar(res, 201, material.cercar(inventari, id));
   });
 }
@@ -58,7 +58,8 @@ const servidor = http.createServer((req, res) => {
     const dades = { metode: req.method, ruta: req.url, estat, ms,
     };
 
-    req.log.info(dades, "petició atesa");
+    const nivell = estat >= 500 ? "error" : estat >= 400 ? "warn" : "info";
+    req.log[nivell](dades, "petició atesa");
   });
 
   const url = new URL(req.url, "http://localhost");
@@ -79,14 +80,14 @@ const servidor = http.createServer((req, res) => {
         try {
           prestec(req, res, cos);
         } catch (err) {
-          enviarError(res, err);
+          enviarError(req, res, err);
         }
       });
       return;
     }
     enviar(res, 404, { error: "Ruta no trobada" });
   } catch (err) {
-    enviarError(res, err);
+    enviarError(req, res, err);
   }
 });
 

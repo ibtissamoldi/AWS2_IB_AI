@@ -5,6 +5,7 @@ const logger = pino({
   base: { servei: "inventari" },
   timestamp: pino.stdTimeFunctions.isoTime,
   formatters: { level: (etiqueta) => ({ level: etiqueta }) },
+  redact: ["persona.nom", "persona.email", "*.authorization", "token"],
 });
 
 module.exports = logger;
