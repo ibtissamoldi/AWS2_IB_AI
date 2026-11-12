@@ -1,6 +1,9 @@
 import http from "node:http";
 import { llegir, desar, filtrar, cercar, prestar } from "./material.js";
 
+import crypto from "node:crypto";
+import logger from "./logger.js";
+
 let llista = llegir();
 
 function enviar(res, status, dades) {
@@ -18,6 +21,28 @@ function enviarError(res, err) {
 }
 
 const servidor = http.createServer((req, res) => {
+  const inici = performance.now();
+
+  req.log = logger.child({ reqId: crypto.randomUUID() });
+  res.on("finish", () => {
+    const estat = res.statusCode;
+
+    let nivell = "info";
+
+    if (estat >= 500) nivell = "error";
+    else if (estat >= 400) nivell = "warn";
+
+    const ms = Math.round(performance.now() - inici);
+
+    const dades = {
+      metode: req.method,
+      ruta: req.url,
+      estat,
+      ms,
+    };
+
+    req.log[nivell](dades, "petició atesa");
+  });
   const url = new URL(req.url, "http://localhost");
   const parts = url.pathname.split("/").filter(Boolean);
 
@@ -51,10 +76,12 @@ const servidor = http.createServer((req, res) => {
 
           desar(novaLlista, (err) => {
             if (err) {
+              req.log.error({ err }, "error inesperat");
               return enviar(res, 500, { error: "Error intern" });
             }
 
             llista = novaLlista;
+            req.log.info({ codi: dades.codi }, "préstec desat");
             const element = cercar(llista, dades.codi);
             enviar(res, 201, element);
           });
@@ -68,7 +95,13 @@ const servidor = http.createServer((req, res) => {
 
     enviar(res, 404, { error: "Ruta no trobada" });
   } catch (err) {
+    if (!err.status) {
+      req.log.error({ err }, "error inesperat");
+    }
     enviarError(res, err);
   }
 });
-servidor.listen(3000, () => console.log("Servidor en marxa a http://localhost:3000"));
+
+servidor.listen(3000, () => {
+  logger.info({ port: 3000 }, "servidor en marxa");
+});
