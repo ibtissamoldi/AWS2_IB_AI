@@ -1,0 +1,49 @@
+// material.js · La lògica de l'inventari en ES Modules
+import fs from "node:fs";
+import path from "node:path";
+
+const RUTA = path.join(import.meta.dirname, "data", "material.json");
+export const ESTATS = ["disponible", "prestat", "avariat"];
+
+// Un error amb status: l'API el convertirà en la resposta que toca
+function error(status, missatge) {
+  const err = new Error(missatge);
+  err.status = status;
+  return err;
+}
+
+// A l'arrencada, llegir amb *Sync és correcte
+export function llegir() {
+  return JSON.parse(fs.readFileSync(RUTA, "utf8"));
+}
+
+// Dins del servidor no es bloqueja: el resultat arriba al callback
+export function desar(llista, callback) {
+  fs.writeFile(RUTA, JSON.stringify(llista, null, 2), callback);
+}
+
+export function filtrar(llista, estat) {
+  if (estat === undefined || estat === null) return llista;
+  if (!ESTATS.includes(estat)) {
+    throw error(400, `Estat no vàlid: ${estat} (vàlids: ${ESTATS.join(", ")})`);
+  }
+  return llista.filter((m) => m.estat === estat);
+}
+
+export function cercar(llista, codi) {
+  const element = llista.find((m) => m.codi === codi);
+  if (!element) throw error(404, `No hi ha cap element amb el codi ${codi}`);
+  return element;
+}
+
+export function prestar(llista, codi, persona) {
+  if (typeof persona !== "string" || !persona.trim()) {
+    throw error(400, "Cal el nom de la persona");
+  }
+  const element = cercar(llista, codi);
+  if (element.estat !== "disponible") {
+    throw error(409, `No es pot prestar: està ${element.estat}`);
+  }
+  const prestat = { estat: "prestat", prestatA: persona.trim(), dataPrestec: new Date().toISOString() };
+  return llista.map((m) => (m.codi === codi ? { ...m, ...prestat } : m));
+}
