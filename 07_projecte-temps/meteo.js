@@ -16,7 +16,9 @@ export async function cercarCiutat(ciutat) {
   const dades = await resposta.json();
 
   if (!dades.results || dades.results.length === 0) {
-    throw new Error("No s'ha trobat la ciutat");
+    const err = new Error("No s'ha trobat la ciutat");
+    err.status = 404;
+    throw err;
   }
 
   return dades.results[0];
