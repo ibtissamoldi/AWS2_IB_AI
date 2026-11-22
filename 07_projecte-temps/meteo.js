@@ -31,12 +31,19 @@ export async function cercarCiutat(ciutat, fetchFn = fetch) {
   const dades = await resposta.json();
 
   if (!dades.results || dades.results.length === 0) {
-    const err = new Error("No s'ha trobat la ciutat");
+    const err = new Error(`No s'ha trobat la ciutat: ${ciutat}`);
     err.status = 404;
     throw err;
   }
 
-  return dades.results[0];
+  const trobada = dades.results[0];
+
+  return {
+    nom: trobada.name,
+    pais: trobada.country_code,
+    latitud: trobada.latitude,
+    longitud: trobada.longitude,
+  };
 }
 
 export async function tempsActual(latitud, longitud, fetchFn = fetch) {
@@ -72,6 +79,12 @@ export async function tempsActual(latitud, longitud, fetchFn = fetch) {
 
   const dades = await resposta.json();
 
+  if (!dades.current) {
+    const err = new Error("Open-Meteo ha respost sense dades del temps");
+    err.status = 502;
+    throw err;
+  }
+
   return {
     temperatura: dades.current.temperature_2m,
     vent: dades.current.wind_speed_10m,
@@ -83,14 +96,14 @@ export async function tempsDe(ciutat, fetchFn = fetch) {
   const dadesCiutat = await cercarCiutat(ciutat, fetchFn);
 
   const dadesTemps = await tempsActual(
-    dadesCiutat.latitude,
-    dadesCiutat.longitude,
+    dadesCiutat.latitud,
+    dadesCiutat.longitud,
     fetchFn,
   );
 
   return {
-    ciutat: dadesCiutat.name,
-    pais: dadesCiutat.country,
+    ciutat: dadesCiutat.nom,
+    pais: dadesCiutat.pais,
     temperatura: dadesTemps.temperatura,
     vent: dadesTemps.vent,
     descripcio: descripcio(dadesTemps.codi),

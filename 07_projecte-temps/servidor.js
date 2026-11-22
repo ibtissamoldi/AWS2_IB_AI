@@ -18,6 +18,7 @@ const servidor = createServer(async (req, res) => {
   const inici = performance.now();
 
   let estat = 500;
+  let errorPeticio;
 
   try {
     const url = new URL(req.url, "http://localhost");
@@ -33,7 +34,17 @@ const servidor = createServer(async (req, res) => {
     const rutaTemps = url.pathname.match(/^\/temps\/(.+)$/);
 
     if (rutaTemps) {
-      const ciutat = decodeURIComponent(rutaTemps[1]);
+      let ciutat;
+
+      try {
+        ciutat = decodeURIComponent(rutaTemps[1]);
+      } catch {
+        estat = 400;
+        enviarJSON(res, estat, {
+          error: "Nom de ciutat no vàlid",
+        });
+        return;
+      }
 
       const dades = await tempsDe(ciutat);
 
@@ -73,6 +84,7 @@ const servidor = createServer(async (req, res) => {
     });
   } catch (err) {
     estat = err.status ?? 500;
+    errorPeticio = err;
 
     const missatge = estat === 500 ? "Error intern" : err.message;
 
@@ -89,7 +101,7 @@ const servidor = createServer(async (req, res) => {
     };
 
     if (estat >= 500) {
-      logger.error(registre, "Petició HTTP");
+      logger.error({ ...registre, err: errorPeticio }, "Petició HTTP");
     } else if (estat >= 400) {
       logger.warn(registre, "Petició HTTP");
     } else {
