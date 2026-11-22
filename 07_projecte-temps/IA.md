@@ -1,6 +1,7 @@
 # Activitat 7 · Com he fet servir la IA
 
 Eina: *quin xatbot has fet servir*
+Eina: ChatGPT (GPT-6)
 
 Omple aquest fitxer **mentre treballes**, no al final. Mai hi enganxis claus, contrasenyes ni dades personals.
 
@@ -64,15 +65,18 @@ Com a mínim, cinc files. Decisió: accepto, modifico o rebutjo.
 
 | Pas | Què he demanat | Què m'ha proposat | Decisió | Motiu |
 | --- | --- | --- | --- | --- |
-| 2 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| 2 | Cómo organizar y configurar el proyecto Node.js | Crear una estructura de archivos y configurar el proyecto para utilizar módulos ES. | Modifico | He mantenido los archivos y la estructura que ya tenía el proyecto, en lugar de crear carpetas adicionales. |
+| 2 | Cómo organizar las responsabilidades de cada archivo | Separar la lógica del servidor, el cliente y las consultas meteorológicas. | Acepto | Así cada archivo tiene una responsabilidad concreta y el código es más fácil de mantener |
+| 3 | Cómo obtener los datos de una ciudad y consultar su tiempo. | Utilizar la API de geolocalización de Open-Meteo para encontrar las coordenadas y después consultar el tiempo. | Acepto | 	Permite buscar ciudades y obtener sus datos meteorológicos sin mezclar las responsabilidades |
+| 4 | Cómo hacer que el cliente consulte mi propia API desde el terminal. | Utilizar fetch para enviar peticiones HTTP a mi servidor. | Acepto | 	El cliente se comunica únicamente con mi API y no directamente con Open-Meteo. |
+| 5 | Cómo probar las funciones de meteo.js sin depender de Internet. | Añadir un parámetro fetchFn para poder utilizar un fetch falso y crear pruebas con node:test. | Acepto |Permite comprobar tanto las respuestas correctas como los errores sin depender de Open-Meteo. |
 
 ## 3 · Una cosa que la IA ha fet malament
 
 *Què va proposar, com te'n vas adonar i com ho vas resoldre.*
+La IA propuso una gestión de errores que inicialmente no funcionaba correctamente. Cuando probé la API con una ciudad inexistente, recibí un error 500 en lugar del 404 esperado.
+
+Me di cuenta al ejecutar (npm run prova-api) y comprobar que una de las pruebas fallaba. Revisé la gestión de errores y corregí el código para que se conservara el estado 404 cuando no se encontraba una ciudad.
 
 ## 4 · Revisió final (Pas 6)
 
